@@ -43,7 +43,6 @@ class Timer():
         self.b_run = Button(self.rootoftimeview,text="START", command=self.start_timer,  font=("Times New Roman",16))
         self.b_run.grid(row=3,column=0, padx=15,sticky="nsew",pady=10)
 
-        self.start_timer()
         self.rootoftimeview.mainloop()
         
         
@@ -55,7 +54,13 @@ class Timer():
         self.rootoftimeview.update()
             #time.sleep(1)
 
-    def change_name_button(self):
+    def change_name_button_to_reverse(self):
+        """
+        If the state was changed from START TO STOP 
+        return True \n
+        If the state was changed from STOP TO START
+        return False
+        """
         if self.b_run["text"]=="START":
             self.b_run["text"]="STOP"
             return True
@@ -64,40 +69,42 @@ class Timer():
             return False
             
     def start_timer(self):
-        state = self.change_name_button()
+        state = self.change_name_button_to_reverse()
         
         if state:
             try:
                 self.counting_down_time =  int(60 * float(self.e_set_time.get()))
             except:
+                #based on length 
                 self.counting_down_time = len(self.e_set_time.get())*60
-            start_time = time()
-            while(True):
+            finally:
+                start_time = time()
+                while(True):
 
-                if time()-start_time>=1:
-                    start_time = time()
-                    self.counting_down_time=self.counting_down_time-1
-                    self.l_time_counting["text"]=str(self.counting_down_time)
+                    if time()-start_time>=1:
+                        start_time = time()
+                        self.counting_down_time=self.counting_down_time-1
+                        self.l_time_counting["text"]=str(self.counting_down_time)
+                    
+                    if self.counting_down_time==0:
+                        self.change_name_button_to_reverse()
+                        self.play_sound()
+                        return "END"
+                    
+                    if self.b_run["text"] == "START":
+                        return
+                    
+                    self.rootoftimeview.update()
+                    sleep(0.25)
                 
-                if self.counting_down_time==0:
-                    self.change_name_button()
-                    break
                 
-                if self.b_run["text"] == "START":
-                    return
-                
-                self.rootoftimeview.update()
-                sleep(0.25)
-            self.play_sound()
-            return self.start_timer()
 
             
             
 
 
-
-OkiekoTajmera = Timer()
-
+WindowTime = Timer()
+WindowTime.start_timer()
 
 
 
