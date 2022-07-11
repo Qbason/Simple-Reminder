@@ -56,13 +56,17 @@ class Timer():
         
         
     def play_sound(self):
-        mixer.init()
-        mixer.music.load("sound.mp3")
-        mixer.music.play()
-        #while mixer.music.get_busy():
-        self.rootoftimeview.update()
-            #time.sleep(1)
-
+        try:
+            mixer.init()
+            mixer.music.load("sound.mp3")
+            mixer.music.play()
+            #while mixer.music.get_busy():
+            self.rootoftimeview.update()
+                #time.sleep(1)
+        except Exception as e:
+            print("Błąd odtworzenia dźwięku")
+        
+        
     def change_name_button_to_reverse(self):
         """
         If the state was changed from START TO STOP 
