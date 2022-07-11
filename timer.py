@@ -1,4 +1,5 @@
-from tkinter import *
+from shutil import ExecError
+from tkinter import Tk,Label,Button,Entry,messagebox
 from pygame import mixer
 from time import sleep
 from threading import Thread
@@ -6,6 +7,8 @@ from threading import Thread
 
 
 class Timer():
+    
+    lista_watkow = []
     
     def __init__(self,play_all_the_time):
         
@@ -50,10 +53,11 @@ class Timer():
         self.b_run = Button(self.rootoftimeview,text="START", command=self.start_timer,  font=("Times New Roman",16))
         self.b_run.grid(row=3,column=0, padx=15,sticky="nsew",pady=10)
         
-            
+        self.start_timer()
+        #self.rootoftimeview.protocol("WM_DELETE_WINDOW", self.on_closing)
         self.rootoftimeview.mainloop()
         
-        
+
         
     def play_sound(self):
         try:
@@ -62,11 +66,10 @@ class Timer():
             mixer.music.play()
             #while mixer.music.get_busy():
             self.rootoftimeview.update()
-                #time.sleep(1)
+            #time.sleep(1)
         except Exception as e:
             print("Błąd odtworzenia dźwięku")
-        
-        
+
     def change_name_button_to_reverse(self):
         """
         If the state was changed from START TO STOP 
@@ -83,6 +86,7 @@ class Timer():
             
     def start_timer(self):
         nowy_watek = Thread(target=self.counting_down)
+        nowy_watek.daemon = True
         nowy_watek.start()
                 
     def counting_down(self):
@@ -123,14 +127,11 @@ class Timer():
             return "STOPED"
 
 
+
+
 if __name__ == "__main__":
 
     #define, if we want to play inifty times the alarm with specific time
     play_all_the_time = True
 
     WindowTime = Timer(play_all_the_time)
-    
-
-
-
-
